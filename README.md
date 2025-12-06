@@ -6,8 +6,6 @@
 
 > **Latest Updates**: Schema-free AI extraction with Banking Codebook integration, multi-language support (EN/RO/DE/FR/ES/IT), flexible field extraction, dynamic prompt generation. See [How AI Extraction Works](#how-ai-extraction-works---prompt-examples) for full prompt examples.
 
-> **Latest Updates**: Schema-free AI extraction with Banking Codebook integration, multi-language support (EN/RO/DE/FR/ES/IT), flexible field extraction, dynamic prompt generation. See [How AI Extraction Works](#how-ai-extraction-works---prompt-examples) for full prompt examples.
-
 ---
 
 ## Story
@@ -1404,13 +1402,6 @@ The project is modular and extensible:
 4. **Add encryption**: Wrap sockets with TLS/SSL
 5. **Add authentication**: Implement API keys or OAuth
 
----
-
-## License
-
-MIT License - See LICENSE for details
-
----
 
 ## Credits
 
