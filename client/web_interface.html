@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1870 Telegraph Protocol - Banking Transfer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .status-message.processing {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1> 1870 Telegraph Protocol</h1>
+            <p class="subtitle">Secure Low-Bandwidth Banking Transfer</p>
+            <span class="badge">Maritime Banking System</span>
+        </div>
+
+        <div class="info-box">
+            <p><strong>AI-Powered Document Processing:</strong> Upload any document (contract, invoice, email) or paste text. Our AI will automatically extract relevant banking information. Signatures and timestamps are handled automatically.</p>
+        </div>
+
+        <form id="transferForm" enctype="multipart/form-data">
+            <!-- Document Upload Section -->
+            <div class="form-section">
+                <h2>Document Input</h2>
+                <div class="form-group">
+                    <label for="documentFile">Upload Document (optional)</label>
+                    <input type="file" id="documentFile" name="documentFile" 
+                           accept="image/*,.pdf,.doc,.docx,.txt"
+                           style="padding: 10px; border: 2px dashed #6c63ff; border-radius: 8px; background: #f8f9ff;">
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Supported: Images (JPG, PNG), PDFs, Documents, Text files
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="documentText">Or Paste Document Text</label>
+                    <textarea id="documentText" name="documentText"
+                              rows="8"
+                              placeholder="Paste contract, email, invoice, or any banking document here...
+
+Example:
+MARITIME BANKING TRANSFER
+FROM: Maersk Shipping Company
+Account: RO49AAAA1B31007593840000
+TO: Deutsche Bank AG
+Account: DE89370400440532013000
+AMOUNT: 5,000,000 EUR
+Payment for container shipment Rotterdam to Singapore"></textarea>
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        AI will automatically extract: sender, receiver, amount, currency, description, and transaction type
+                    </small>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                 Send Transfer via Satellite
+            </button>
+        </form>
+
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px; color: #666;">Processing transfer...</p>
+        </div>
+
+        <div class="status-message" id="statusMessage"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('documentFile');
+        const textInput = document.getElementById('documentText');
+        
+        // Disable text input when file is selected
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                textInput.disabled = true;
+                textInput.style.backgroundColor = '#f5f5f5';
+                textInput.style.cursor = 'not-allowed';
+                textInput.placeholder = 'File uploaded - text input disabled';
+            } else {
+                textInput.disabled = false;
+                textInput.style.backgroundColor = '';
+                textInput.style.cursor = '';
+                textInput.placeholder = `Paste contract, email, invoice, or any banking document here...
+
+Example:
+MARITIME BANKING TRANSFER
+FROM: Maersk Shipping Company
+Account: RO49AAAA1B31007593840000
+TO: Deutsche Bank AG
+Account: DE89370400440532013000
+AMOUNT: 5,000,000 EUR
+Payment for container shipment Rotterdam to Singapore`;
+            }
+        });
+        
+        // Disable file input when text is entered
+        textInput.addEventListener('input', function() {
+            if (this.value.trim().length > 0) {
+                fileInput.disabled = true;
+                fileInput.style.cursor = 'not-allowed';
+                fileInput.style.opacity = '0.5';
+            } else {
+                fileInput.disabled = false;
+                fileInput.style.cursor = '';
+                fileInput.style.opacity = '';
+            }
+        });
+        
+        document.getElementById('transferForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loader = document.getElementById('loader');
+            const statusMessage = document.getElementById('statusMessage');
+            const submitBtn = e.target.querySelector('.submit-btn');
+            
+            // Show loader
+            loader.classList.add('active');
+            statusMessage.style.display = 'none';
+            submitBtn.disabled = true;
+            
+            // Prepare form data with file support
+            const formDataToSend = new FormData();
+            
+            const fileInput = document.getElementById('documentFile');
+            const textInput = document.getElementById('documentText');
+            
+            if (fileInput.files.length > 0) {
+                formDataToSend.append('document_file', fileInput.files[0]);
+            }
+            
+            if (textInput.value.trim()) {
+                formDataToSend.append('document_text', textInput.value);
+            }
+            
+            try {
+                // Send to Flask backend
+                const response = await fetch('http://localhost:5870/submit_transfer', {
+                    method: 'POST',
+                    body: formDataToSend  // Send as FormData for file support
+                });
+                
+                const result = await response.json();
+                
+                // Hide loader
+                loader.classList.remove('active');
+                submitBtn.disabled = false;
+                
+                // Show status
+                statusMessage.style.display = 'block';
+                
+                if (result.status === 'success') {
+                    statusMessage.className = 'status-message success';
+                    statusMessage.innerHTML = `
+                        <strong>Transfer Successful!</strong><br>
+                        <strong>AI Extracted Data:</strong><br>
+                        From: ${result.extracted_data.sender_name || 'N/A'}<br>
+                        To: ${result.extracted_data.receiver_name || 'N/A'}<br>
+                        Amount: ${result.extracted_data.amount || 'N/A'} ${result.extracted_data.currency || ''}<br>
+                        Reference: ${result.reference_number}<br>
+                        Hash: ${result.hash.substring(0, 16)}...<br>
+                        Package Size: ${result.package_size_kb} KB<br>
+                        Server Response: ${result.server_response.message}
+                    `;
+                    
+                    // Reset form
+                    setTimeout(() => {
+                        e.target.reset();
+                        statusMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    statusMessage.className = 'status-message error';
+                    statusMessage.innerHTML = `
+                        <strong>Transfer Failed</strong><br>
+                        ${result.error || 'Unknown error occurred'}
+                    `;
+                }
+            } catch (error) {
+                loader.classList.remove('active');
+                submitBtn.disabled = false;
+                
+                statusMessage.style.display = 'block';
+                statusMessage.className = 'status-message error';
+                statusMessage.innerHTML = `
+                    <strong>Connection Error</strong><br>
+                    Could not connect to server. Please make sure the server is running.
+                `;
+                
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
