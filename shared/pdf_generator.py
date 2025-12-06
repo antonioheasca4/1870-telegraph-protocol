@@ -15,7 +15,6 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
-from reportlab.pdfgen import canvas
 
 # CRITICAL: Set invariant mode for deterministic reproducibility
 # This eliminates timestamps and random IDs from PDF
@@ -191,23 +190,46 @@ class PDFGenerator:
         # Header
         elements.extend(self._create_header(data))
         
-        # Sender section
-        sender_data = [
-            ['Name:', data.get('sender_name', 'N/A')],
-        ]
-        if data.get('sender_account'):
-            sender_data.append(['Account:', data.get('sender_account', '')])
+        # Define fields to skip (technical/internal fields)
+        skip_fields = {
+            'generated_timestamp', 'reference_number', 'signature_status', 
+            'date', 'signature_present', 'additional_info'
+        }
         
-        elements.extend(self._create_section('SENDER INFORMATION', sender_data))
+        # Group fields by prefix
+        sender_fields = {}
+        receiver_fields = {}
+        other_fields = {}
         
-        # Receiver section
-        if data.get('receiver_name'):
-            receiver_data = [
-                ['Name:', data.get('receiver_name', 'N/A')],
-            ]
-            if data.get('receiver_account'):
-                receiver_data.append(['Account:', data.get('receiver_account', '')])
+        for key, value in sorted(data.items()):
+            if key in skip_fields or not value:
+                continue
             
+            if key.startswith('sender_'):
+                sender_fields[key] = value
+            elif key.startswith('receiver_'):
+                receiver_fields[key] = value
+            else:
+                other_fields[key] = value
+        
+        # Sender section - dynamic from JSON
+        if sender_fields:
+            sender_data = []
+            for field, value in sender_fields.items():
+                label = field.replace('sender_', '').replace('_', ' ').title()
+                if isinstance(value, (dict, list)):
+                    value = str(value)
+                sender_data.append([f'{label}:', Paragraph(str(value), self.normal_style)])
+            elements.extend(self._create_section('SENDER INFORMATION', sender_data))
+        
+        # Receiver section - dynamic from JSON
+        if receiver_fields:
+            receiver_data = []
+            for field, value in receiver_fields.items():
+                label = field.replace('receiver_', '').replace('_', ' ').title()
+                if isinstance(value, (dict, list)):
+                    value = str(value)
+                receiver_data.append([f'{label}:', Paragraph(str(value), self.normal_style)])
             elements.extend(self._create_section('RECEIVER INFORMATION', receiver_data))
         
         # Amount box
@@ -217,35 +239,51 @@ class PDFGenerator:
                 data.get('currency', 'EUR')
             ))
         
-        # Transaction details
-        transaction_data = [
-            ['Description:', Paragraph(str(data.get('description', 'N/A')), self.normal_style)],
-            ['Type:', data.get('transaction_type', 'N/A')],
-        ]
-        elements.extend(self._create_section('TRANSACTION DETAILS', transaction_data))
+        # All other fields - organized dynamically
+        for field, value in other_fields.items():
+            if field in ['amount', 'currency']:
+                continue  # Already shown in amount box
+            
+            # Handle special types
+            if isinstance(value, list):
+                # Lists (line_items, cargo_manifest, etc.)
+                elements.append(Paragraph(field.replace('_', ' ').title(), self.section_style))
+                for idx, item in enumerate(value, 1):
+                    if isinstance(item, dict):
+                        item_text = f"<b>Item {idx}:</b><br/>"
+                        for k, v in item.items():
+                            item_text += f"{k.replace('_', ' ').title()}: {v}<br/>"
+                        elements.append(Paragraph(item_text, self.normal_style))
+                        elements.append(Spacer(1, 0.2*cm))
+                    else:
+                        elements.append(Paragraph(f"• {item}", self.normal_style))
+                elements.append(Spacer(1, 0.3*cm))
+            
+            elif isinstance(value, dict):
+                # Dictionaries (bank_details, etc.)
+                dict_data = []
+                for k, v in value.items():
+                    label = k.replace('_', ' ').title()
+                    dict_data.append([f'{label}:', Paragraph(str(v), self.normal_style)])
+                elements.extend(self._create_section(field.replace('_', ' ').title(), dict_data))
+            
+            else:
+                # Simple fields - group them
+                label = field.replace('_', ' ').title()
+                if not hasattr(self, '_other_data'):
+                    self._other_data = []
+                self._other_data.append([f'{label}:', Paragraph(str(value), self.normal_style)])
         
-        # Additional info
-        if data.get('additional_info'):
-            add_data = []
-            additional_info = data.get('additional_info', {})
-            
-            # Handle both dict and string
-            if isinstance(additional_info, dict):
-                # Convert dict to readable text lines, skip JSON-like keys
-                for key, value in sorted(additional_info.items()):
-                    # Skip technical fields that look like JSON keys
-                    if key not in ['aml', 'kyc', 'method', 'maritime_operations', 'banking_support']:
-                        clean_key = key.replace('_', ' ').title()
-                        # Use Paragraph for better text wrapping
-                        value_text = Paragraph(str(value), self.normal_style)
-                        add_data.append([f"{clean_key}:", value_text])
-            elif isinstance(additional_info, str) and additional_info:
-                # For string, use Paragraph for proper wrapping
-                note_text = Paragraph(additional_info, self.normal_style)
-                add_data.append(['Note:', note_text])
-            
-            if add_data:
-                elements.extend(self._create_section('ADDITIONAL INFORMATION', add_data))
+        # Add grouped "other" fields
+        if hasattr(self, '_other_data'):
+            elements.extend(self._create_section('TRANSACTION DETAILS', self._other_data))
+            delattr(self, '_other_data')
+        
+        # Additional info (if exists as string)
+        if data.get('additional_info') and isinstance(data.get('additional_info'), str):
+            elements.extend(self._create_section('ADDITIONAL INFORMATION', [
+                ['Note:', Paragraph(data['additional_info'], self.normal_style)]
+            ]))
         
         # Signature
         if data.get('signature_present'):
