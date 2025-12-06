@@ -4,6 +4,8 @@
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Protocol](https://img.shields.io/badge/protocol-1870_Telegraph-orange)
 
+> **Latest Updates**: Schema-free AI extraction with Banking Codebook integration, multi-language support (EN/RO/DE/FR/ES/IT), flexible field extraction, dynamic prompt generation. See [How AI Extraction Works](#how-ai-extraction-works---prompt-examples) for full prompt examples.
+
 ---
 
 ## Story
@@ -13,6 +15,25 @@ In **1870** (the year Deutsche Bank was founded), international transfers were d
 **Today**, in maritime zones (cargo ships), on oil platforms, or in conflict zones, satellite internet is **slow and extremely expensive**. Modern contracts (20MB PDFs) block the network.
 
 **The Solution**: We reinvent the "Codebook" using **AI + Deterministic Templating**. We no longer send files, we send **their meaning** (Semantic Compression).
+
+---
+
+## Table of Contents
+
+- [Architecture Overview](#architecture-overview)
+- [Key Features](#key-features)
+  - [AI-Powered Document Processing](#ai-powered-document-processing-client-side-only)
+  - [Banking Codebook](#banking-codebook)
+  - [How AI Extraction Works - Prompt Examples](#how-ai-extraction-works---prompt-examples)
+- [Semantic vs Traditional Compression](#semantic-vs-traditional-compression)
+- [Project Structure](#project-structure)
+- [What Information is Extracted?](#what-information-is-extracted)
+  - [Multi-Language Support](#multi-language-support)
+- [How It Works](#how-it-works)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Security & Integrity](#security--integrity)
+- [Technical Details](#technical-details)
 
 ---
 
@@ -92,9 +113,217 @@ In **1870** (the year Deutsche Bank was founded), international transfers were d
 
 ### AI-Powered Document Processing (Client-Side Only)
 - **Google Gemini AI**: Extracts banking data from unstructured documents
+- **Banking Codebook Integration**: Uses terminology glossary for accurate field recognition
 - **Multi-format support**: PDF, images (JPG, PNG, etc.), text files
+- **Multi-language support**: Recognizes banking terms in any language (English, Romanian, German, French, etc.)
+- **Flexible extraction**: Not limited to predefined fields - extracts ALL relevant banking data
 - **Intelligent validation**: Rejects non-banking documents automatically
 - **Used ONLY on client**: Server reconstructs PDFs without AI
+
+### Banking Codebook
+- **Comprehensive terminology guide**: Transaction types, field patterns, industry terms
+- **Pattern recognition**: IBANs, SWIFT codes, currency symbols, date formats
+- **Multi-language awareness**: Recognizes "Sender"/"Expeditor"/"Absender"/"Expéditeur" as same concept
+- **Industry-specific terms**: Maritime (vessel, cargo, port) and Banking (L/C, AML, KYC)
+- **Dynamic prompt generation**: Codebook data automatically included in AI prompts
+- **Validation rules**: Ensures extracted data meets banking requirements
+
+### How AI Extraction Works - Prompt Examples
+
+The system uses **schema-free flexible extraction** - Gemini extracts ALL relevant banking fields, not just predefined ones.
+
+**Prompt Structure Sent to Gemini:**
+
+```
+You are an AI assistant specialized in extracting information from banking documents.
+Your task is to analyze the provided text and extract ALL relevant banking information you can find.
+
+CRITICAL RULES:
+1. **Extract ONLY information explicitly present in the text**
+   - Do NOT invent, assume, or fabricate any information
+   - If a field is not mentioned, omit it from the JSON or set it to null
+
+2. **If the text DOES contain banking information:**
+   - Extract ALL relevant banking fields you can identify
+   - You are NOT limited to predefined fields - extract any banking-relevant information
+   - Use the Banking Codebook below as a guide for recognizing banking terminology
+
+3. **Data formatting:**
+   - Dates: Use ISO 8601 format (YYYY-MM-DD)
+   - Numbers: Use numeric types for amounts (not strings)
+   - Booleans: Use true/false (not "yes"/"no")
+
+---
+
+The following BANKING CODEBOOK contains terminology, patterns, and field recognition rules
+to help you identify and extract banking information accurately:
+
+BANKING CODEBOOK - TERMINOLOGY REFERENCE:
+
+Transaction Types (recognize any of these):
+- TRANSFER: transfer, wire transfer, bank transfer (also: SWIFT transfer, SEPA transfer)
+- PAYMENT: payment, pay, settlement (also: invoice payment, bill payment)
+- WIRE: wire, wire transfer, telegraphic transfer (also: TT, T/T)
+- SWIFT: SWIFT, SWIFT transfer, SWIFT MT103
+- SEPA: SEPA, SEPA transfer, SEPA credit transfer
+- ACH: ACH, ACH transfer, automated clearing house
+
+Field Recognition Patterns:
+
+SENDER / PAYER / DEBTOR / REMITTER / FROM / ORIGINATOR / CLIENT fields indicate:
+- Entity initiating the transaction
+- Extract: name, account number (IBAN/account), address if available
+
+RECEIVER / PAYEE / BENEFICIARY / CREDITOR / TO / RECIPIENT fields indicate:
+- Entity receiving the transaction
+- Extract: name, account number (IBAN/account), address if available
+
+AMOUNT / SUM / TOTAL / VALUE fields indicate:
+- Monetary value of transaction
+- May appear as: "5,000 EUR", "EUR 5,000", "$5,000", "€5,000"
+
+CURRENCY codes:
+- Standard: EUR, USD, GBP, CHF, JPY, RON, CNY, AUD, CAD, SEK
+- Symbols: € (EUR), $ (USD), £ (GBP), ¥ (JPY)
+
+ACCOUNT / ACCOUNT NUMBER / ACC NO / A/C / ACCT formats:
+- IBAN: 2 letters + 2 digits + up to 30 alphanumeric (e.g., RO49AAAA1B31007593840000)
+- Generic: 8-34 digits
+
+DATE / TRANSACTION DATE / PAYMENT DATE formats:
+- ISO: 2025-12-06
+- EU: 06/12/2025 or 06.12.2025
+- US: December 6, 2025
+
+REFERENCE / REF / TRANSACTION ID / INVOICE patterns:
+- Invoice: INV-2025-12-001
+- Transaction: MSK-2025-1234
+- Generic: REF20251206001
+
+Maritime Industry Terms (if present):
+- Vessel / Ship / Cargo Vessel / Container Ship: vessels information
+- Cargo / Freight / Shipment / Goods: cargo information
+- Port / Harbor / Terminal / Berth: ports information
+- Bill Of Lading / B/L / Bol / Manifest: documentation information
+
+Banking Industry Terms (if present):
+- Letter Of Credit / L/C / Lc / Documentary Credit: trade_finance
+- Kyc / Know Your Customer / Customer Due Diligence: compliance
+- Aml / Anti-Money Laundering / Transaction Monitoring: compliance
+
+VALIDATION REQUIREMENTS:
+1. transaction_type: must match one of: transfer, payment, wire, swift, sepa, ach
+2. sender_name: required (company or person name)
+3. amount: required, must be positive number
+4. currency: required, use standard 3-letter code (EUR, USD, etc.)
+5. receiver_name: required (company or person name)
+6. sender_account/receiver_account: optional but extract if present
+7. date: optional, use ISO format YYYY-MM-DD
+8. reference_number: optional, extract any reference/invoice numbers
+9. description: optional, summarize payment purpose
+
+IMPORTANT: The codebook terms above are provided in English, but you may encounter the same
+banking concepts in OTHER LANGUAGES (Romanian, German, French, Spanish, etc.). Recognize and
+extract banking information regardless of the language used in the document. For example:
+- "Expeditor" / "Sender" / "Absender" / "Expéditeur" all mean SENDER
+- "Beneficiar" / "Receiver" / "Empfänger" / "Bénéficiaire" all mean RECEIVER
+- "Suma" / "Amount" / "Betrag" / "Montant" all mean AMOUNT
+Use the codebook as a semantic guide, not a literal word-matching dictionary.
+
+---
+
+EXAMPLE OUTPUT FORMAT (you can add more fields as needed):
+{
+  "transaction_type": "transfer",
+  "sender_name": "Company A",
+  "sender_account": "RO49AAAA1B31007593840000",
+  "sender_bank": "Bank Name",
+  "receiver_name": "Company B",
+  "receiver_account": "DE89370400440532013000",
+  "receiver_bank": "Bank Name",
+  "amount": 50000,
+  "currency": "EUR",
+  "date": "2025-12-06",
+  "description": "Payment for services",
+  "reference_number": "INV-2025-001",
+  "additional_info": "Any other relevant details"
+}
+
+Remember: Extract ALL relevant fields you find, not just the ones in the example.
+The example shows common fields, but you should include ANY banking-related information present in the text.
+
+TEXT TO ANALYZE:
+[User's document content here]
+
+JSON OUTPUT:
+```
+
+**Key Features of This Prompt:**
+
+1. **Schema-Free Extraction**: Gemini extracts any banking-relevant field, not limited to predefined schema
+2. **Codebook Integration**: All terminology from `banking_codebook.py` dynamically inserted
+3. **Multi-Language Support**: Explicit instructions to recognize banking terms in any language
+4. **Pattern Recognition**: IBAN formats, currency symbols, date formats, reference patterns
+5. **Industry Context**: Maritime and banking-specific terminology (vessel, cargo, L/C, AML, KYC)
+6. **Validation Rules**: Clear requirements for transaction_type, amounts, currencies
+7. **Example-Based Learning**: Shows Gemini what a typical banking JSON looks like
+8. **Flexible Extraction**: Explicitly told to extract MORE than the example if relevant data found
+
+**Real Extraction Example:**
+
+Input Document (Romanian + English mixed):
+```
+ORDIN DE PLATĂ INTERNAȚIONAL
+Data: 06 decembrie 2025
+Referință: MSK-2025-1234
+
+Expeditor: SC Maritime Logistics SRL
+Cont IBAN: RO49INGB0123456789012345
+Banca: ING Bank România
+
+Beneficiar: Port Authority Services GmbH
+Cont IBAN: DE89370400440532013000
+Banca: Deutsche Bank AG
+SWIFT: DEUTDEFF
+
+Suma: 45.000,00 EUR
+Scop plată: Taxe manipulare containere - Navă MSK REGINA
+Referință factură: INV-PORT-2025-067
+
+Detalii suplimentare:
+- Încărcare: 150 TEU containere
+- Perioadă: 01-05 decembrie 2025
+- Terminal: Hamburg Container Terminal
+```
+
+Gemini's JSON Output:
+```json
+{
+  "transaction_type": "wire",
+  "sender_name": "SC Maritime Logistics SRL",
+  "sender_account": "RO49INGB0123456789012345",
+  "sender_bank": "ING Bank România",
+  "receiver_name": "Port Authority Services GmbH",
+  "receiver_account": "DE89370400440532013000",
+  "receiver_bank": "Deutsche Bank AG",
+  "receiver_swift": "DEUTDEFF",
+  "amount": 45000.00,
+  "currency": "EUR",
+  "date": "2025-12-06",
+  "description": "Taxe manipulare containere - Navă MSK REGINA",
+  "reference_number": "MSK-2025-1234",
+  "invoice_reference": "INV-PORT-2025-067",
+  "additional_info": "Container handling fees - Vessel MSK REGINA. Cargo: 150 TEU containers. Period: 01-05 December 2025. Terminal: Hamburg Container Terminal"
+}
+```
+
+Notice how Gemini:
+- ✅ Recognized Romanian terms ("Expeditor" = sender, "Beneficiar" = receiver, "Suma" = amount)
+- ✅ Extracted BOTH reference numbers (transaction + invoice)
+- ✅ Added `receiver_swift` field (not in example, but relevant)
+- ✅ Translated Romanian description to English in `additional_info`
+- ✅ Structured cargo details from bullet points into coherent text
+- ✅ Recognized maritime context (vessel name, TEU containers, terminal)
 
 ### Deterministic PDF Reconstruction (Server-Side)
 - **No AI in reconstruction**: Server uses same Python code as client
@@ -204,6 +433,7 @@ CompresieSemantica/
 │
 ├── shared/                       # Shared modules (client & server)
 │   ├── ai_extractor.py          # AI extraction with Google Gemini
+│   ├── banking_codebook.py      # Banking terminology glossary and patterns
 │   ├── pdf_generator.py         # Deterministic PDF generation (ReportLab)
 │   └── hash_validator.py        # Integrity validation (SHA-256)
 │
@@ -221,9 +451,11 @@ CompresieSemantica/
 
 ## What Information is Extracted?
 
+The AI extraction system uses **flexible schema-free extraction** powered by the Banking Codebook. Gemini extracts ALL relevant banking information found in documents, not just predefined fields.
+
 ### Required Banking Information
 
-The AI extraction system looks for the following **required fields** in documents:
+These fields must be present for a valid banking document:
 
 #### 1. **Transaction Type** (transaction_type)
 - **Valid values:** "transfer", "payment", "wire", "swift", "sepa", "ach"
@@ -267,18 +499,102 @@ The AI extraction system looks for the following **required fields** in document
 
 ### Optional Banking Information
 
-These fields enhance the document but are not required:
+Gemini extracts ANY additional banking-relevant fields found in documents:
 
+**Common Additional Fields:**
+- **sender_bank**: Sender's financial institution
+- **receiver_bank**: Receiver's financial institution  
+- **sender_swift**: Sender's SWIFT/BIC code
+- **receiver_swift**: Receiver's SWIFT/BIC code
+- **sender_address**: Physical address of sender
+- **receiver_address**: Physical address of receiver
 - **description**: Purpose of transfer, invoice details, notes
-- **additional_info**: Compliance notes, special instructions, references
-- **date**: Transaction date (auto-generated if missing)
-- **reference_number**: Transaction reference (auto-generated if missing)
-- **signature_status**: Verification status (auto-generated)
+- **reference_number**: Transaction reference (e.g., MSK-2025-1234)
+- **invoice_reference**: Invoice number (e.g., INV-PORT-2025-067)
+- **date**: Transaction date in ISO 8601 format (YYYY-MM-DD)
+- **additional_info**: Compliance notes, special instructions, cargo details
+- **signature_status**: Verification status
+- **vessel_name**: Ship/vessel involved (maritime context)
+- **cargo_details**: TEU, goods type, loading period
+- **terminal**: Port terminal information
+- **compliance_notes**: KYC, AML, regulatory information
+
+**Flexible Extraction Philosophy:**
+- Not limited to predefined schema
+- Extracts what's relevant to the specific document
+- Preserves domain-specific context (maritime, trade finance, etc.)
+- Auto-generates missing required fields (date, reference) if needed
+
+### Multi-Language Support
+
+The system recognizes banking terminology in **any language**. The Banking Codebook provides semantic guidance, not literal word matching.
+
+**Supported Languages:**
+- 🇬🇧 **English**: Sender, Receiver, Amount, Currency, Payment
+- 🇷🇴 **Romanian**: Expeditor, Beneficiar, Suma, Valută, Plată
+- 🇩🇪 **German**: Absender, Empfänger, Betrag, Währung, Zahlung
+- 🇫🇷 **French**: Expéditeur, Bénéficiaire, Montant, Devise, Paiement
+- 🇪🇸 **Spanish**: Remitente, Destinatario, Cantidad, Moneda, Pago
+- 🇮🇹 **Italian**: Mittente, Destinatario, Importo, Valuta, Pagamento
+- Plus any other language Gemini understands
+
+**Example: Romanian Banking Document**
+```
+ORDIN DE PLATĂ
+Expeditor: SC Transport Maritime SRL
+Cont: RO49INGB1234567890
+Beneficiar: Autoritatea Portuară Hamburg
+Cont: DE89370400440532013000
+Suma: 25.000 EUR
+Scop: Taxe de acostare și manipulare
+```
+
+**Extracted as:**
+```json
+{
+  "transaction_type": "payment",
+  "sender_name": "SC Transport Maritime SRL",
+  "sender_account": "RO49INGB1234567890",
+  "receiver_name": "Autoritatea Portuară Hamburg",
+  "receiver_account": "DE89370400440532013000",
+  "amount": 25000,
+  "currency": "EUR",
+  "description": "Taxe de acostare și manipulare"
+}
+```
+
+**Example: German Banking Document**
+```
+ÜBERWEISUNGSAUFTRAG
+Absender: Hamburg Shipping GmbH
+Konto: DE12345678901234567890
+Empfänger: Constanța Port Services
+Konto: RO98BCRL7654321098765432
+Betrag: 18.500 EUR
+Verwendungszweck: Hafengebühren Containerterminal
+```
+
+**Extracted as:**
+```json
+{
+  "transaction_type": "transfer",
+  "sender_name": "Hamburg Shipping GmbH",
+  "sender_account": "DE12345678901234567890",
+  "receiver_name": "Constanța Port Services",
+  "receiver_account": "RO98BCRL7654321098765432",
+  "amount": 18500,
+  "currency": "EUR",
+  "description": "Hafengebühren Containerterminal"
+}
+```
+
+The codebook explicitly instructs Gemini:
+> "IMPORTANT: The codebook terms are provided in English, but you may encounter the same banking concepts in OTHER LANGUAGES. Recognize and extract banking information regardless of the language used. Use the codebook as a semantic guide, not a literal word-matching dictionary."
 
 ### What Documents Work?
 
 **Valid Documents (will be accepted):**
-- Banking contracts with transfer details
+- Banking contracts with transfer details (any language)
 - Wire transfer orders (SWIFT, SEPA, ACH)
 - Invoice payment instructions
 - Email confirmations with transaction details
@@ -289,6 +605,7 @@ These fields enhance the document but are not required:
 - Photographed contracts (JPG, PNG, etc.)
 - PDF invoices and statements
 - Text files with banking data
+- Mixed-language documents (e.g., Romanian + English)
 
 **Invalid Documents (will be rejected with error):**
 - Personal letters without banking info

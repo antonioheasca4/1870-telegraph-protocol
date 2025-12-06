@@ -1,15 +1,15 @@
 """
 AI Extractor Module
 Processes unstructured data (text, images, documents) and extracts key information
-using Google Gemini API for banking domain.
+using Google Gemini API for banking domain with Banking Codebook integration.
 """
 
 import os
 import json
-import base64
 from typing import Dict, Any, Optional, Union
 from pathlib import Path
 import google.generativeai as genai
+from .banking_codebook import BankingCodebook
 
 
 class AIExtractor:
@@ -102,39 +102,77 @@ class AIExtractor:
         
         Args:
             text: Text to process
-            schema: Custom JSON schema (optional, default: BANKING_SCHEMA)
+            schema: Custom JSON schema (optional, NOT used in prompt - only for reference)
             
         Returns:
             Dict with extracted data
         """
-        schema = schema or self.BANKING_SCHEMA
+        # Get codebook-enhanced prompt section
+        codebook_enhancement = BankingCodebook.get_extraction_prompt_enhancement()
         
         prompt = f"""You are an AI assistant specialized in extracting information from banking documents.
-Analyze the provided text and extract all relevant banking information according to the JSON schema.
+Your task is to analyze the provided text and extract ALL relevant banking information you can find.
 
 CRITICAL RULES:
-1. If the text does NOT contain banking/financial information, return a JSON with:
-   - transaction_type: "unknown"
-   - sender_name: "Not found"
-   - date: current date (YYYY-MM-DD)
-   - All other fields: null or empty strings
-   
-2. If the text DOES contain banking information:
-   - Extract only information explicitly present in text
-   - Do not invent or assume information
-   - For missing optional fields, use null
-   - Respect data types from schema
-   
-3. For dates, use ISO 8601 format (YYYY-MM-DD)
-4. Return ONLY valid JSON, without additional text, without markdown, without ```json```
+1. **Extract ONLY information explicitly present in the text**
+   - Do NOT invent, assume, or fabricate any information
+   - If a field is not mentioned, omit it from the JSON or set it to null
+   - Do NOT add placeholder values or guesses
 
-JSON Schema:
-{json.dumps(schema, indent=2)}
+2. **If the text does NOT contain banking/financial information:**
+   - Return a minimal JSON with only: {{"transaction_type": "unknown", "error": "No banking information found"}}
+   
+3. **If the text DOES contain banking information:**
+   - Extract ALL relevant banking fields you can identify
+   - You are NOT limited to predefined fields - extract any banking-relevant information
+   - Use the Banking Codebook below as a guide for recognizing banking terminology
+   - Return a comprehensive JSON with all extracted data
 
-Text to analyze:
+4. **Data formatting:**
+   - Dates: Use ISO 8601 format (YYYY-MM-DD)
+   - Numbers: Use numeric types for amounts (not strings)
+   - Booleans: Use true/false (not "yes"/"no")
+   - Strings: Use for text fields (names, descriptions, references)
+
+5. **Output format:**
+   - Return ONLY valid JSON, without additional text
+   - Do NOT wrap in markdown (no ```json``` blocks)
+   - Ensure proper JSON syntax (quotes, commas, braces)
+
+---
+
+The following BANKING CODEBOOK contains terminology, patterns, and field recognition rules
+to help you identify and extract banking information accurately. Use this as a reference
+guide for understanding banking terms, transaction types, and field formats:
+
+{codebook_enhancement}
+
+---
+
+EXAMPLE OUTPUT FORMAT (you can add more fields as needed):
+{{
+  "transaction_type": "transfer",
+  "sender_name": "Company A",
+  "sender_account": "RO49AAAA1B31007593840000",
+  "sender_bank": "Bank Name",
+  "receiver_name": "Company B",
+  "receiver_account": "DE89370400440532013000",
+  "receiver_bank": "Bank Name",
+  "amount": 50000,
+  "currency": "EUR",
+  "date": "2025-12-06",
+  "description": "Payment for services",
+  "reference_number": "INV-2025-001",
+  "additional_info": "Any other relevant details"
+}}
+
+Remember: Extract ALL relevant fields you find, not just the ones in the example.
+The example shows common fields, but you should include ANY banking-related information present in the text.
+
+TEXT TO ANALYZE:
 {text}
 
-JSON:"""
+JSON OUTPUT:"""
         
         try:
             response = self.model.generate_content(
@@ -192,43 +230,72 @@ JSON:"""
         
         Args:
             image_path: Path to image file
-            schema: Custom JSON schema (optional, default: BANKING_SCHEMA)
+            schema: Custom JSON schema (optional, NOT used in prompt - only for reference)
             
         Returns:
             Dict with extracted data
         """
-        schema = schema or self.BANKING_SCHEMA
-        
         # Check if file exists
         image_path_obj = Path(image_path)
         if not image_path_obj.exists():
             raise FileNotFoundError(f"Image file not found: {image_path}")
         
+        # Get codebook-enhanced prompt section
+        codebook_enhancement = BankingCodebook.get_extraction_prompt_enhancement()
+        
         prompt = f"""You are an AI assistant specialized in extracting information from banking documents.
-Analyze the provided image (contract, invoice, banking form) and extract all relevant information according to the JSON schema.
+Your task is to analyze the provided image (contract, invoice, banking form) and extract ALL relevant banking information you can find.
 
 CRITICAL RULES:
-1. If the image does NOT contain banking/financial information, return a JSON with:
-   - transaction_type: "unknown"
-   - sender_name: "Not found"
-   - date: current date (YYYY-MM-DD)
-   - All other fields: null or empty strings
-   
-2. If the image DOES contain banking information:
-   - Extract only information explicitly present in image
-   - Carefully read handwritten or printed text
-   - Do not invent or assume information
-   - For missing optional fields, use null
-   - Respect data types from schema
-   
-3. For dates, use ISO 8601 format (YYYY-MM-DD)
-4. For signatures, detect if they exist
-5. Return ONLY valid JSON, without additional text, without markdown, without ```json```
+1. **Extract ONLY information explicitly visible in the image**
+   - Do NOT invent, assume, or fabricate any information
+   - If a field is not visible, omit it from the JSON or set it to null
+   - Read handwritten and printed text carefully
 
-JSON Schema:
-{json.dumps(schema, indent=2)}
+2. **If the image does NOT contain banking/financial information:**
+   - Return a minimal JSON with only: {{"transaction_type": "unknown", "error": "No banking information found"}}
+   
+3. **If the image DOES contain banking information:**
+   - Extract ALL relevant banking fields you can identify
+   - You are NOT limited to predefined fields - extract any banking-relevant information
+   - Use the Banking Codebook below as a guide for recognizing banking terminology
 
-JSON:"""
+4. **Data formatting:**
+   - Dates: Use ISO 8601 format (YYYY-MM-DD)
+   - Numbers: Use numeric types for amounts (not strings)
+   - Detect signatures if present (signature_present: true/false)
+
+5. **Output format:**
+   - Return ONLY valid JSON, without additional text
+   - Do NOT wrap in markdown (no ```json``` blocks)
+
+---
+
+The following BANKING CODEBOOK contains terminology, patterns, and field recognition rules
+to help you identify and extract banking information accurately. Use this as a reference
+guide for understanding banking terms, transaction types, and field formats:
+
+{codebook_enhancement}
+
+---
+
+EXAMPLE OUTPUT FORMAT (you can add more fields as needed):
+{{
+  "transaction_type": "transfer",
+  "sender_name": "Company A",
+  "sender_account": "RO49AAAA1B31007593840000",
+  "receiver_name": "Company B",
+  "receiver_account": "DE89370400440532013000",
+  "amount": 50000,
+  "currency": "EUR",
+  "date": "2025-12-06",
+  "description": "Payment for services",
+  "signature_present": true
+}}
+
+Remember: Extract ALL relevant fields you find in the image.
+
+JSON OUTPUT:"""
         
         try:
             # Load image
@@ -274,13 +341,11 @@ JSON:"""
         
         Args:
             pdf_path: Path to PDF file
-            schema: Custom JSON schema (optional, default: BANKING_SCHEMA)
+            schema: Custom JSON schema (optional, NOT used in prompt - only for reference)
             
         Returns:
             Dict with extracted data
         """
-        schema = schema or self.BANKING_SCHEMA
-        
         # Check if file exists
         pdf_path_obj = Path(pdf_path)
         if not pdf_path_obj.exists():
@@ -293,31 +358,63 @@ JSON:"""
             # Upload the file
             pdf_file = genai.upload_file(pdf_path)
             
+            # Get codebook-enhanced prompt section
+            codebook_enhancement = BankingCodebook.get_extraction_prompt_enhancement()
+            
             prompt = f"""You are an AI assistant specialized in extracting information from banking documents.
-Analyze the provided PDF document and extract all relevant banking information according to the JSON schema.
+Your task is to analyze the provided PDF document and extract ALL relevant banking information you can find.
 
 CRITICAL RULES:
-1. If the PDF does NOT contain banking/financial information, return a JSON with:
-   - transaction_type: "unknown"
-   - sender_name: "Not found"
-   - date: current date (YYYY-MM-DD)
-   - All other fields: null or empty strings
-   
-2. If the PDF DOES contain banking information:
-   - Extract only information explicitly present in document
+1. **Extract ONLY information explicitly present in the PDF**
+   - Do NOT invent, assume, or fabricate any information
+   - If a field is not mentioned, omit it from the JSON or set it to null
    - Read all pages carefully
-   - Do not invent or assume information
-   - For missing optional fields, use null
-   - Respect data types from schema
+
+2. **If the PDF does NOT contain banking/financial information:**
+   - Return a minimal JSON with only: {{"transaction_type": "unknown", "error": "No banking information found"}}
    
-3. For dates, use ISO 8601 format (YYYY-MM-DD)
-4. For signatures, detect if they exist
-5. Return ONLY valid JSON, without additional text, without markdown, without ```json```
+3. **If the PDF DOES contain banking information:**
+   - Extract ALL relevant banking fields you can identify across all pages
+   - You are NOT limited to predefined fields - extract any banking-relevant information
+   - Use the Banking Codebook below as a guide for recognizing banking terminology
 
-JSON Schema:
-{json.dumps(schema, indent=2)}
+4. **Data formatting:**
+   - Dates: Use ISO 8601 format (YYYY-MM-DD)
+   - Numbers: Use numeric types for amounts (not strings)
+   - Detect signatures if present (signature_present: true/false)
 
-JSON:"""
+5. **Output format:**
+   - Return ONLY valid JSON, without additional text
+   - Do NOT wrap in markdown (no ```json``` blocks)
+
+---
+
+The following BANKING CODEBOOK contains terminology, patterns, and field recognition rules
+to help you identify and extract banking information accurately. Use this as a reference
+guide for understanding banking terms, transaction types, and field formats:
+
+{codebook_enhancement}
+
+---
+
+EXAMPLE OUTPUT FORMAT (you can add more fields as needed):
+{{
+  "transaction_type": "transfer",
+  "sender_name": "Company A",
+  "sender_account": "RO49AAAA1B31007593840000",
+  "receiver_name": "Company B",
+  "receiver_account": "DE89370400440532013000",
+  "amount": 50000,
+  "currency": "EUR",
+  "date": "2025-12-06",
+  "description": "Payment for services",
+  "invoice_number": "INV-2025-001",
+  "total_items": 5
+}}
+
+Remember: Extract ALL relevant fields you find in the PDF, across all pages.
+
+JSON OUTPUT:"""
             
             # Generate content with PDF
             response = self.model.generate_content(
