@@ -441,12 +441,12 @@ Bandwidth Saved: 46.5% (1,977 bytes not transmitted)
 ### Information Preservation Guarantee
 
 The system ensures **100% semantic accuracy**:
-- ✓ All financial amounts preserved exactly
-- ✓ All account numbers transmitted complete
-- ✓ All dates and references maintained
-- ✓ All transaction descriptions intact
-- ✓ PDF reconstruction is bit-perfect (same JSON = same PDF)
-- ✓ Hash validation ensures zero data corruption
+- All financial amounts preserved exactly
+- All account numbers transmitted complete
+- All dates and references maintained
+- All transaction descriptions intact
+- PDF reconstruction is bit-perfect (same JSON = same PDF)
+- Hash validation ensures zero data corruption
 
 What's "lost" is intentional:
 - Visual formatting (reconstructed using deterministic PDF layout)
@@ -972,7 +972,7 @@ is_valid = verify_received_package(package, reconstructed_pdf)
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```powershell
 # Test client
@@ -988,7 +988,7 @@ ls data/server_output/
 
 ---
 
-## 📈 Performanță
+## Performanță
 
 | Metric | Valoare |
 |--------|---------|
@@ -1001,17 +1001,17 @@ ls data/server_output/
 
 ---
 
-## 🔐 Securitate
+## Securitate
 
-- ✅ **Hash SHA-256** pentru integritate
-- ✅ **Reconstrucție deterministă** (fără modificări)
-- ✅ **Validare bit-perfect** pe server
-- ✅ **Detectare tamper** automată
-- ⚠️ **Nu include criptare** (adaugă TLS pentru transmisie)
+- **Hash SHA-256** pentru integritate
+- **Reconstrucție deterministă** (fără modificări)
+- **Validare bit-perfect** pe server
+- **Detectare tamper** automată
+- **Nu include criptare** (adaugă TLS pentru transmisie)
 
 ---
 
-## 🤝 Contribuții
+## Contribuții
 
 Proiectul este modular și extensibil:
 
@@ -1020,15 +1020,8 @@ Proiectul este modular și extensibil:
 3. **Implementează API real** pentru transmisie
 4. **Adaugă criptare TLS/SSL** pentru securitate
 
----
 
-## 📝 License
-
-MIT License - Vezi LICENSE pentru detalii
-
----
-
-## 🏆 Credits
+## Credits
 
 **The 1870 Telegraph Protocol**  
 Inspirat de istoria Deutsche Bank și telegrafele din 1870  
@@ -1036,10 +1029,10 @@ Implementat cu tehnologii moderne: Google Gemini AI, Flask, ReportLab
 
 ---
 
-## 📞 Support
+## Support
 
 Pentru întrebări sau probleme:
-- 📧 Email: [your-email]
+- 📧 Email: antonioheasca4@gmail.com
 - 💬 Issues: GitHub Issues
 - 📖 Docs: Acest README
 
