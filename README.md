@@ -35,26 +35,6 @@ In **1870** (the year Deutsche Bank was founded), international transfers were d
 - [Security & Integrity](#security--integrity)
 - [Technical Details](#technical-details)
 
----
-
-## Table of Contents
-
-- [Architecture Overview](#architecture-overview)
-- [Key Features](#key-features)
-  - [AI-Powered Document Processing](#ai-powered-document-processing-client-side-only)
-  - [Banking Codebook](#banking-codebook)
-  - [How AI Extraction Works - Prompt Examples](#how-ai-extraction-works---prompt-examples)
-- [Semantic vs Traditional Compression](#semantic-vs-traditional-compression)
-- [Project Structure](#project-structure)
-- [What Information is Extracted?](#what-information-is-extracted)
-  - [Multi-Language Support](#multi-language-support)
-- [How It Works](#how-it-works)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Security & Integrity](#security--integrity)
-- [Technical Details](#technical-details)
-
----
 
 ## Architecture Overview
 
@@ -137,10 +117,7 @@ In **1870** (the year Deutsche Bank was founded), international transfers were d
 ### AI-Powered Document Processing (Client-Side Only)
 - **Google Gemini AI**: Extracts banking data from unstructured documents
 - **Banking Codebook Integration**: Uses terminology glossary for accurate field recognition
-- **Banking Codebook Integration**: Uses terminology glossary for accurate field recognition
 - **Multi-format support**: PDF, images (JPG, PNG, etc.), text files
-- **Multi-language support**: Recognizes banking terms in any language (English, Romanian, German, French, etc.)
-- **Flexible extraction**: Not limited to predefined fields - extracts ALL relevant banking data
 - **Multi-language support**: Recognizes banking terms in any language (English, Romanian, German, French, etc.)
 - **Flexible extraction**: Not limited to predefined fields - extracts ALL relevant banking data
 - **Intelligent validation**: Rejects non-banking documents automatically
@@ -1402,32 +1379,6 @@ The project is modular and extensible:
 4. **Add encryption**: Wrap sockets with TLS/SSL
 5. **Add authentication**: Implement API keys or OAuth
 
-
-## Credits
-
-**The 1870 Telegraph Protocol**  
-Inspired by Deutsche Bank's history and 1870 telegraph codebooks  
-Implemented with modern technologies: Google Gemini AI, Flask, ReportLab, Python
-
----
-
-## Roadmap
-
-- [ ] REST API for transmission (replace TCP)
-- [ ] Support for multiple document types
-- [ ] Web dashboard for monitoring
-- [ ] Integration with real banking systems
-- [ ] Multi-language support
-- [ ] End-to-end encryption (TLS/SSL)
-- [ ] Docker containerization
-- [ ] Cloud deployment (AWS/Azure)
-- [ ] Mobile client application
-- [ ] Blockchain integration for audit trail
-
----
-
-**Built for Hackathon 2025**  
-*Version 1.0.0: Production Ready*
 
 # Generate PDF from JSON
 pdf_bytes = codebook.reconstruct_document(json_data)
