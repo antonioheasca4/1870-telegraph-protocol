@@ -1,0 +1,231 @@
+URGENT WIRE TRANSFER - MARITIME EMERGENCY
+
+Document Reference: WIRE-URGENT-2025-1456
+Date: December 7, 2025
+Time: 03:45 UTC
+Transaction Type: WIRE (Urgent/Emergency Transfer)
+Priority: IMMEDIATE (Same-day execution required)
+Maritime Context: Emergency Bunker Fuel Purchase
+
+
+================================================================================
+                            SENDER INFORMATION
+================================================================================
+
+Company Name: Ocean Freight AS
+Registered Office: Oslo, Norway
+Vessel in Distress: MV Nordic Explorer (IMO: 9123456)
+Current Position: 52°N, 4°E (North Sea, 80 NM west of Rotterdam)
+
+Banking Details:
+    Account Holder: Ocean Freight AS - Emergency Fund
+    IBAN: NO9386011117947
+    Bank: DNB Bank ASA
+    SWIFT/BIC: DNBANOKKXXX
+    Bank Branch: Oslo Maritime Finance
+
+Emergency Contact: +47 22 48 10 50
+Vessel Master: Captain Erik Olsen
+Operations Manager: maritime.ops@oceanfreight.no
+
+
+================================================================================
+                           RECEIVER INFORMATION
+================================================================================
+
+Company: Bunker Fuel Supplies BV
+Service: Marine Fuel Supply (Emergency Delivery)
+Location: Rotterdam Port, Netherlands
+
+Banking Details:
+    Account Holder: Bunker Fuel Supplies BV
+    IBAN: NL91ABNA0417164300
+    Bank: ABN AMRO Bank N.V.
+    SWIFT/BIC: ABNANL2A
+    Bank Branch: Rotterdam Port Branch
+
+Contact: emergency@bunkerfuel.nl
+Emergency Hotline: +31 10 240 5000 (24/7)
+
+
+================================================================================
+                          TRANSACTION DETAILS
+================================================================================
+
+Wire Transfer Amount: EUR 120,000.00
+(One Hundred Twenty Thousand Euro Only)
+
+Currency: EUR (Euro)
+Execution: IMMEDIATE (within 2 hours)
+
+EMERGENCY SITUATION:
+Vessel MV Nordic Explorer has experienced fuel contamination and requires
+URGENT bunker fuel supply to avoid maritime incident and port detention.
+
+Fuel Requirements:
+    - Marine Gas Oil (MGO): 200 metric tons
+    - Delivery Method: Barge alongside at sea
+    - Delivery Location: 52°N, 4°E (North Sea)
+    - Required Delivery Time: Within 8 hours
+    - Unit Price: EUR 600/MT
+    - Total Fuel Cost: EUR 120,000.00
+
+Vessel Status:
+    - Current Speed: 5 knots (reduced - fuel conservation)
+    - Fuel Remaining: 15 metric tons (critical level)
+    - ETA Rotterdam (if no refuel): IMPOSSIBLE
+    - Crew: 24 persons
+    - Cargo: 1,200 TEU containers (time-sensitive goods)
+
+Urgency Reason:
+    - Contaminated fuel discovered 06:00 UTC
+    - Cannot proceed to port with current fuel
+    - Cargo delivery deadline: December 9, 2025
+    - Detention costs if delayed: EUR 50,000/day
+    - Weather forecast: Storm expected in 18 hours
+
+
+================================================================================
+                        ADDITIONAL INFORMATION
+================================================================================
+
+Emergency Invoice: EMERG-BUNKER-2025-789
+Quote Reference: QT-EMERG-071225-001
+Validity: 4 hours only (fuel price volatile)
+Payment Terms: WIRE TRANSFER - Immediate execution required
+Delivery Terms: Payment BEFORE fuel delivery (cash before delivery - CBD)
+
+Special Instructions:
+    ⚠ URGENT: Execute wire transfer within 2 hours
+    ⚠ Fuel delivery barge dispatched upon payment confirmation
+    ⚠ Payment confirmation to: confirm@bunkerfuel.nl
+    ⚠ Copy vessel master: c.olsen@oceanfreight.no
+    ⚠ NO DELAYS ACCEPTED - Vessel safety critical
+
+Maritime Emergency Declaration:
+    - Emergency situation declared under SOLAS regulations
+    - Flag State (Norway) notified
+    - Vessel insurance: Emergency expenses covered
+    - P&I Club: Gard Marine - Emergency approved
+
+
+================================================================================
+                      COMPLIANCE & DECLARATIONS
+================================================================================
+
+Anti-Money Laundering (AML):
+    - Emergency transaction - standard AML checks waived under maritime law
+    - Both parties verified (established relationship)
+    - Transaction monitoring: Flagged for post-verification
+
+Know Your Customer (KYC):
+    - Ocean Freight AS: KYC on file (verified 2024)
+    - Bunker Fuel Supplies BV: Known supplier (15-year relationship)
+    - Beneficial ownership: Previously verified
+
+Emergency Exemptions:
+    - FATF Recommendation 16 (Wire transfers): Emergency maritime exception
+    - EU Payment Services Directive: Article 34 (Emergency provisions)
+    - Norwegian Maritime Authority: Emergency approved
+
+Sanctions Screening:
+    - Vessel: Norwegian flag (NATO member, compliant)
+    - Fuel supplier: Dutch company (EU, verified)
+    - No sanctions exposure
+
+Purpose Verification:
+    - Maritime emergency (bunker fuel contamination)
+    - Vessel safety critical
+    - Legitimate commercial operation
+    - Insurance claim filed (claim #: GARD-2025-8901)
+
+
+================================================================================
+                           SIGNATURES
+================================================================================
+
+This URGENT WIRE TRANSFER has been authorized under emergency maritime
+procedures via the 1870 Telegraph Protocol satellite transmission system.
+
+Electronic Signature Status: VERIFIED (Emergency Protocol)
+Authorized by: Ocean Freight AS - CEO (Emergency Authorization)
+Timestamp: 2025-12-07 03:45:00 UTC
+Digital Certificate: Valid (Emergency Override SHA-256)
+Hash Verification: Pending server reconstruction
+
+Dual Authorization:
+    1. CEO: Per Johansen (Emergency Authority)
+    2. Operations Manager: Knut Hansen (Vessel Safety Officer)
+
+
+================================================================================
+                        TRANSMISSION NOTES
+================================================================================
+
+⚠ EMERGENCY SATELLITE TRANSMISSION FROM VESSEL AT SEA ⚠
+
+This urgent wire transfer order is transmitted via EXPENSIVE SATELLITE
+from vessel in distress. 1870 Telegraph Protocol used to minimize costs
+during emergency situation.
+
+Transmission Method: Semantic Compression (CRITICAL for emergency)
+Original Document: ~25 KB
+Compressed JSON: ~4 KB
+Compression Ratio: 6.25x
+Satellite Cost: $0.40 (vs $2.50 direct) - SAVINGS: $2.10
+
+Emergency Transmission Details:
+    Location: North Sea, 52°N, 4°E
+    Satellite: Inmarsat FleetBroadband (emergency channel)
+    Bandwidth Cost: $50/MB (EMERGENCY RATE - 5x normal!)
+    Weather: Deteriorating (storm approaching)
+    Vessel Status: CRITICAL FUEL LEVEL
+
+Time Sensitivity:
+    - Document transmission: 5 seconds
+    - Bank processing: 30-120 minutes (wire transfer)
+    - Fuel barge dispatch: Immediate upon payment
+    - Fuel delivery: 6-8 hours
+    - Weather window: 18 hours before storm
+
+Cost Analysis:
+    - Without compression: 25 KB @ $50/MB = $1.25
+    - With compression: 4 KB @ $50/MB = $0.20
+    - SAVINGS: $1.05 (5.25x cheaper!)
+    - In emergency, EVERY CENT COUNTS!
+
+
+================================================================================
+                          CONTACT INFORMATION
+================================================================================
+
+EMERGENCY CONTACTS (24/7):
+
+Vessel Master (MV Nordic Explorer):
+    Captain Erik Olsen
+    Satellite Phone: +870 776 543 210
+    Email: c.olsen@oceanfreight.no
+
+Fuel Supplier (Emergency Dispatch):
+    Bunker Fuel Supplies BV
+    Emergency Hotline: +31 10 240 5000
+    Email: emergency@bunkerfuel.nl
+    Payment Confirm: confirm@bunkerfuel.nl
+
+Ocean Freight Operations:
+    Emergency Ops Center: +47 22 48 10 50
+    Email: maritime.ops@oceanfreight.no
+
+Insurance (P&I Club):
+    Gard Marine: +47 23 11 40 00
+    Emergency Claims: claims@gard.no
+
+1870 Telegraph Protocol Support:
+    Emergency: support@1870protocol.io
+    Satellite Tech: +45 3363 3363
+
+
+END OF URGENT WIRE TRANSFER ORDER
+Document Hash (SHA-256): [To be calculated - URGENT PROCESSING]
+
+⚠ THIS IS AN EMERGENCY MARITIME TRANSACTION - IMMEDIATE ACTION REQUIRED ⚠

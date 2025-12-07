@@ -149,25 +149,127 @@ guide for understanding banking terms, transaction types, and field formats:
 
 ---
 
-EXAMPLE OUTPUT FORMAT (you can add more fields as needed):
+EXAMPLE OUTPUT FORMATS (maritime banking - COMPRESSED format):
+
+EXAMPLE 1 - SWIFT International Payment (Port Charges):
 {{
-  "transaction_type": "transfer",
-  "sender_name": "Company A",
-  "sender_account": "RO49AAAA1B31007593840000",
-  "sender_bank": "Bank Name",
-  "receiver_name": "Company B",
+  "transaction_type": "swift",
+  "sender_name": "Maersk Line",
+  "sender_account": "DK5000400440116243",
+  "sender_bank": "Danske Bank",
+  "sender_swift": "DABADKKK",
+  "receiver_name": "Hamburg Port Authority",
   "receiver_account": "DE89370400440532013000",
-  "receiver_bank": "Bank Name",
-  "amount": 50000,
+  "receiver_bank": "Deutsche Bank",
+  "receiver_swift": "DEUTDEFF",
+  "amount": 45000,
   "currency": "EUR",
   "date": "2025-12-06",
-  "description": "Payment for services",
-  "reference_number": "INV-2025-001",
-  "additional_info": "Any other relevant details"
+  "description": "Port charges - Hamburg CTerm",
+  "vessel_name": "MV Maersk Sealand",
+  "vessel_imo": "9876543",
+  "vessel_flag": "DK",
+  "port_name": "Hamburg CTerm",
+  "port_berth": "Burchardkai B7",
+  "port_arrival_datetime": "2025-12-01T06:00:00Z",
+  "port_departure_datetime": "2025-12-05T18:00:00Z",
+  "port_time_duration": "4d12h",
+  "cargo_total_handling_teu": 330,
+  "cargo_type": "Mixed container"
 }}
 
-Remember: Extract ALL relevant fields you find, not just the ones in the example.
-The example shows common fields, but you should include ANY banking-related information present in the text.
+EXAMPLE 2 - WIRE Emergency Transfer (Bunker Fuel):
+{{
+  "transaction_type": "wire",
+  "priority": "IMMEDIATE",
+  "sender_name": "Ocean Freight AS",
+  "sender_account": "NO9386011117947",
+  "sender_bank": "DNB Bank",
+  "sender_swift": "DNBANOKKXXX",
+  "receiver_name": "Bunker Fuel Supplies BV",
+  "receiver_account": "NL91ABNA0417164300",
+  "receiver_bank": "ABN AMRO",
+  "receiver_swift": "ABNANL2A",
+  "amount": 120000,
+  "currency": "EUR",
+  "date": "2025-12-07",
+  "time_utc": "03:45",
+  "description": "Emergency bunker - contamination MV Nordic Explorer",
+  "vessel_name": "MV Nordic Explorer",
+  "vessel_imo": "9123456",
+  "vessel_flag": "NO",
+  "vessel_current_position": "52°N 4°E",
+  "execution_details": {{
+    "priority": "IMMEDIATE",
+    "timeframe": "2h"
+  }},
+  "emergency_situation_details": {{
+    "reason": "Fuel contamination - urgent bunker supply",
+    "fuel_requirements": {{
+      "type": "MGO",
+      "quantity_mt": 150,
+      "delivery_window": "8h"
+    }}
+  }}
+}}
+
+EXAMPLE 3 - PAYMENT Invoice Settlement (Cargo Handling):
+{{
+  "transaction_type": "payment",
+  "sender_name": "MSC",
+  "sender_account": "CH9300762011623852957",
+  "sender_bank": "UBS Switzerland",
+  "sender_swift": "UBSWCHZH80A",
+  "receiver_name": "Port de Barcelona - Terminal Catalunya",
+  "receiver_account": "ES9121000418450200051332",
+  "receiver_bank": "CaixaBank",
+  "receiver_swift": "CAIXESBBXXX",
+  "amount": 82500,
+  "currency": "EUR",
+  "date": "2025-12-06",
+  "invoice_number": "BCN-BEST-2025-445",
+  "invoice_date": "2025-11-26",
+  "due_date": "2025-12-11",
+  "description": "Container handling - MSC Flaminia Barcelona BEST",
+  "vessel_name": "MSC Flaminia",
+  "vessel_imo": "9321456",
+  "vessel_flag": "LR",
+  "vessel_type": "ULCV",
+  "port_name": "Barcelona",
+  "port_terminal": "BEST",
+  "port_berth": "N Quay B5-6",
+  "port_time_duration": "5d7h30m",
+  "cargo_operations": {{
+    "discharged_teu": 2840,
+    "loaded_teu": 3150,
+    "total_moves_teu": 5990
+  }},
+  "vat_included": true,
+  "vat_rate": 0.21
+}}
+
+COMPRESSION RULES (apply consistently):
+1. Duration: "4 days, 12 hours" → "4d12h" | "5 days, 7 hours, 30 minutes" → "5d7h30m"
+2. Terminals: "Barcelona Europe South Terminal" → "BEST" | "Container Terminal Services" → "CTerm"
+3. Berths: "North Quay, Berth 5-6" → "N Quay B5-6"
+4. Company names: "Mediterranean Shipping Company (MSC)" → "MSC"
+5. Banks: "UBS Switzerland AG" → "UBS Switzerland" | "CaixaBank, S.A." → "CaixaBank"
+6. Countries: Use ISO codes → "Switzerland"="CH", "Spain"="ES", "Liberia"="LR"
+7. Phone: Remove spaces → "+34 932 986 000" → "+34932986000"
+8. Descriptions: CONCISE, remove vessel name if redundant:
+   - BAD: "Container handling & terminal services - MSC Flaminia, Barcelona BEST"
+   - GOOD: "Container handling - Barcelona BEST"
+9. Nested objects: Keep only ESSENTIAL fields:
+   - cargo_operations: Only totals (discharged_teu, loaded_teu, total_moves_teu)
+   - Remove: detailed breakdowns, lists of cargo types unless critical
+   - invoice_summary: Simplify or remove if amount field already covers it
+10. Positions: "52 degrees North, 4 degrees East" → "52°N 4°E"
+11. Remove redundancy: Don't repeat vessel/port names already in dedicated fields
+12. Compliance objects: Simplify to essential status fields only
+- Phone: "+49 40 428470" → "+4940428470" (remove spaces)
+- Descriptions: Be CONCISE - "Port charges & container terminal fees for MV Maersk Sealand" → "Port charges - Hamburg CTerm"
+
+REMEMBER: Extract ALL relevant fields, but keep values COMPRESSED and CONCISE for satellite bandwidth optimization.
 
 TEXT TO ANALYZE:
 {text}
@@ -193,22 +295,91 @@ JSON OUTPUT:"""
             
             response_text = response_text.strip()
             
-            # Try to parse JSON
+            # Try to parse JSON with multiple recovery strategies
             try:
                 extracted_data = json.loads(response_text)
             except json.JSONDecodeError as e:
-                # Try to recover from truncated JSON
-                # Find the last complete field
-                last_complete_brace = response_text.rfind('}')
-                if last_complete_brace > 0:
-                    truncated_json = response_text[:last_complete_brace + 1]
+                print(f"⚠ JSON parse error: {str(e)}")
+                print(f"⚠ Attempting recovery strategies...")
+                
+                extracted_data = None
+                
+                # Strategy 1: Fix unterminated strings by closing quotes
+                try:
+                    # Count quotes to see if odd number (unclosed string)
+                    fixed_text = response_text
+                    
+                    # Find unterminated string and close it
+                    lines = fixed_text.split('\n')
+                    for i, line in enumerate(lines):
+                        # Check if line has unclosed quote
+                        if line.count('"') % 2 == 1 and not line.strip().endswith(','):
+                            lines[i] = line + '",'
+                    
+                    fixed_text = '\n'.join(lines)
+                    
+                    # Try to find last valid closing brace
+                    brace_count = 0
+                    last_valid_pos = 0
+                    for i, char in enumerate(fixed_text):
+                        if char == '{':
+                            brace_count += 1
+                        elif char == '}':
+                            brace_count -= 1
+                            if brace_count == 0:
+                                last_valid_pos = i + 1
+                    
+                    if last_valid_pos > 0:
+                        fixed_text = fixed_text[:last_valid_pos]
+                        extracted_data = json.loads(fixed_text)
+                        print(f"✓ Recovered using quote closure strategy")
+                except:
+                    pass
+                
+                # Strategy 2: Find last complete object
+                if not extracted_data:
                     try:
-                        extracted_data = json.loads(truncated_json)
-                        print(f"Warning: Recovered from truncated JSON response")
+                        # Find outermost closing brace
+                        last_brace = response_text.rfind('}')
+                        if last_brace > 0:
+                            # Try progressively smaller chunks
+                            for end_pos in range(last_brace + 1, max(0, last_brace - 500), -1):
+                                try:
+                                    truncated = response_text[:end_pos]
+                                    extracted_data = json.loads(truncated)
+                                    print(f"✓ Recovered by truncating to position {end_pos}")
+                                    break
+                                except:
+                                    continue
                     except:
-                        raise Exception(f"Failed to parse JSON from Gemini response: {str(e)}\nResponse: {response_text[:500]}")
-                else:
-                    raise Exception(f"Failed to parse JSON from Gemini response: {str(e)}\nResponse: {response_text[:500]}")
+                        pass
+                
+                # Strategy 3: Retry request to Gemini
+                if not extracted_data:
+                    print(f"⚠ Retrying request to Gemini...")
+                    try:
+                        response = self.model.generate_content(
+                            prompt + "\n\nIMPORTANT: Return ONLY valid, complete JSON. Close all strings and objects properly.",
+                            generation_config=self.generation_config
+                        )
+                        response_text = response.text.strip()
+                        # Clean markdown
+                        if response_text.startswith('```json'):
+                            response_text = response_text[7:]
+                        if response_text.startswith('```'):
+                            response_text = response_text[3:]
+                        if response_text.endswith('```'):
+                            response_text = response_text[:-3]
+                        response_text = response_text.strip()
+                        
+                        extracted_data = json.loads(response_text)
+                        print(f"✓ Retry successful")
+                    except Exception as retry_error:
+                        print(f"✗ Retry failed: {str(retry_error)}")
+                
+                # If all strategies failed, raise error
+                if not extracted_data:
+                    raise Exception(f"Failed to parse JSON from Gemini response after all recovery attempts: {str(e)}\nResponse: {response_text[:500]}")
             
             # Validate that banking information was found
             if not self._is_valid_banking_data(extracted_data):
@@ -279,21 +450,23 @@ guide for understanding banking terms, transaction types, and field formats:
 
 ---
 
-EXAMPLE OUTPUT FORMAT (you can add more fields as needed):
+EXAMPLE OUTPUT FORMAT (maritime banking - adapt fields as needed):
 {{
-  "transaction_type": "transfer",
-  "sender_name": "Company A",
+  "transaction_type": "payment",
+  "sender_name": "Maersk Line Ltd",
   "sender_account": "RO49AAAA1B31007593840000",
-  "receiver_name": "Company B",
-  "receiver_account": "DE89370400440532013000",
-  "amount": 50000,
+  "receiver_name": "Rotterdam Port Authority",
+  "receiver_account": "NL91ABNA0417164300",
+  "amount": 25000,
   "currency": "EUR",
   "date": "2025-12-06",
-  "description": "Payment for services",
+  "description": "Port charges and cargo handling fees",
+  "vessel_name": "Maersk Sealand",
+  "port": "Rotterdam Container Terminal",
   "signature_present": true
 }}
 
-Remember: Extract ALL relevant fields you find in the image.
+REMEMBER: Extract ALL relevant fields including maritime context (vessel names, cargo details, port information).
 
 JSON OUTPUT:"""
         
@@ -397,22 +570,27 @@ guide for understanding banking terms, transaction types, and field formats:
 
 ---
 
-EXAMPLE OUTPUT FORMAT (you can add more fields as needed):
+EXAMPLE OUTPUT FORMAT (maritime banking PDF - adapt fields as needed):
 {{
-  "transaction_type": "transfer",
-  "sender_name": "Company A",
-  "sender_account": "RO49AAAA1B31007593840000",
-  "receiver_name": "Company B",
+  "transaction_type": "wire",
+  "sender_name": "Ocean Freight Services AS",
+  "sender_account": "NO9386011117947",
+  "sender_swift": "DNBANOKKXXX",
+  "receiver_name": "Hamburg Port Services GmbH",
   "receiver_account": "DE89370400440532013000",
-  "amount": 50000,
+  "receiver_bank": "Deutsche Bank AG",
+  "amount": 150000,
   "currency": "EUR",
   "date": "2025-12-06",
-  "description": "Payment for services",
-  "invoice_number": "INV-2025-001",
-  "total_items": 5
+  "description": "Urgent bunker fuel payment",
+  "reference_number": "BUNKER-2025-1234",
+  "vessel_name": "Nordic Explorer",
+  "cargo_details": "Bunker fuel 500 MT",
+  "port": "Hamburg",
+  "additional_info": "Emergency fuel supply for vessel departure"
 }}
 
-Remember: Extract ALL relevant fields you find in the PDF, across all pages.
+REMEMBER: Extract ALL relevant fields across all PDF pages. Include maritime context (vessel, port, cargo).
 
 JSON OUTPUT:"""
             

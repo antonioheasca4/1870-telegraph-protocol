@@ -1,0 +1,208 @@
+MARITIME BANKING SWIFT PAYMENT ORDER
+
+Document Reference: SWIFT-PORT-HH-2025-067
+Date: December 6, 2025
+Transaction Type: SWIFT International Payment (MT103)
+Priority: Standard
+Maritime Context: Port Authority Invoice Settlement
+
+================================================================================
+                            SENDER INFORMATION
+================================================================================
+
+Company Name: Maersk Line Limited
+Registered Office: Copenhagen, Denmark
+Vessel Operating: MV Maersk Sealand (IMO: 9876543)
+Banking Details:
+    Account Holder: Maersk Line Limited - Operating Account
+    IBAN: DK5000400440116243
+    Bank: Danske Bank A/S
+    SWIFT/BIC: DABADKKK
+    Bank Address: Holmens Kanal 2-12, 1092 Copenhagen, Denmark
+
+Authorized by: Maritime Finance Department
+Contact: finance.maritime@maersk.com
+Vessel Master: Captain Lars Jensen
+
+
+================================================================================
+                           RECEIVER INFORMATION
+================================================================================
+
+Institution: Hamburg Port Authority (HPA)
+Department: Container Terminal Services - Finance Division
+Address: Neuer Wandrahm 4, 20457 Hamburg, Germany
+Banking Details:
+    Account Holder: Hamburg Port Authority
+    IBAN: DE89370400440532013000
+    Bank: Deutsche Bank AG
+    SWIFT/BIC: DEUTDEFF
+    Bank Branch: Hamburg Hafen Branch
+
+Invoice Contact: invoices@hamburg-port-authority.de
+Port Operations: +49 40 42847 0
+
+
+================================================================================
+                          TRANSACTION DETAILS
+================================================================================
+
+Payment Amount: EUR 45,000.00
+(Forty-Five Thousand Euro Only)
+
+Currency: EUR (Euro)
+Exchange Rate: N/A (same currency)
+
+Purpose of Payment:
+Port charges and container terminal fees for vessel MV Maersk Sealand
+at Hamburg Container Terminal (Burchardkai).
+
+Service Period: December 1-5, 2025
+Vessel Details:
+    Name: MV Maersk Sealand
+    IMO Number: 9876543
+    Flag: Denmark
+    Call Sign: OXPM2
+
+Port Operations:
+    Berth: Burchardkai Terminal, Berth 7
+    Arrival: December 1, 2025 06:00 UTC
+    Departure: December 5, 2025 18:00 UTC
+    Total Port Time: 4 days, 12 hours
+
+Cargo Operations:
+    Container Discharge: 150 TEU
+    Container Loading: 180 TEU
+    Total Handling: 330 TEU (Twenty-foot Equivalent Units)
+    Cargo Type: Mixed containerized general cargo
+
+Fees Breakdown:
+    - Berthing Fees (4.5 days): EUR 18,000.00
+    - Pilotage (in/out): EUR 4,500.00
+    - Towage (2 tugs): EUR 3,200.00
+    - Mooring Services: EUR 1,200.00
+    - Container Handling (330 TEU @ EUR 45/TEU): EUR 14,850.00
+    - Port Dues: EUR 2,250.00
+    - Environmental Fee: EUR 1,000.00
+    TOTAL: EUR 45,000.00
+
+
+================================================================================
+                        ADDITIONAL INFORMATION
+================================================================================
+
+Invoice Reference: INV-PORT-2025-067
+Invoice Date: December 5, 2025
+Due Date: December 20, 2025 (Net 15 days)
+Payment Method: SWIFT MT103 International Payment
+VAT: Not applicable (international maritime port services)
+
+Port Authority References:
+    - Call Number: HH-2025-1234
+    - Berth Booking: BK-BCK-2025-0567
+    - Cargo Manifest: MNF-2025-8901
+
+Special Instructions:
+    - SWIFT payment via MT103 message type
+    - Payment to be executed within 2 business days
+    - Confirmation of payment to: finance@hamburg-port-authority.de
+    - Copy to vessel agent: agent.hamburg@maersk.com
+    - Reference invoice number in payment description
+
+Regulatory Compliance:
+    - ISPS Code compliant (International Ship and Port Facility Security)
+    - IMO regulations followed
+    - EU Customs procedures completed
+
+
+================================================================================
+                      COMPLIANCE & DECLARATIONS
+================================================================================
+
+Anti-Money Laundering (AML): 
+    - All parties comply with EU AML Directive (2015/849/EU)
+    - Enhanced due diligence completed for port services
+    - Transaction monitoring: Low risk (standard port operations)
+
+Know Your Customer (KYC): 
+    - Maersk Line Limited: KYC verified (AAA rating)
+    - Hamburg Port Authority: Government entity (exempt)
+    - Beneficial ownership disclosed
+
+Sanctions Screening: 
+    - No parties subject to EU/UN/US sanctions
+    - Vessel screening: PASSED (no restrictions)
+    - Flag state verification: Denmark (EU member, compliant)
+
+Maritime Compliance:
+    - Port State Control inspection: PASSED
+    - Certificate of Registry: Valid
+    - ISM Code compliance: Verified
+    - Ship Security Certificate: Valid until 2027
+
+Purpose Verification: 
+    - Commercial maritime port services (legitimate trade)
+    - Invoice verified against port tariff schedule
+    - Services rendered and documented
+
+
+================================================================================
+                           SIGNATURES
+================================================================================
+
+This SWIFT payment order has been authorized and verified electronically
+through the 1870 Telegraph Protocol secure maritime banking system.
+
+Electronic Signature Status: VERIFIED
+Authorized by: Maersk Line Limited - Finance Department
+Timestamp: 2025-12-06 10:45:00 UTC
+Digital Certificate: Valid (SHA-256)
+Hash Verification: Pending server reconstruction
+
+
+================================================================================
+                        TRANSMISSION NOTES
+================================================================================
+
+This document is transmitted via SATELLITE COMMUNICATION from vessel
+MV Maersk Sealand using the 1870 Telegraph Protocol to minimize
+expensive maritime bandwidth usage.
+
+Transmission Method: Semantic Compression (AI + Deterministic Reconstruction)
+Original PDF Size: ~20 KB
+Compressed JSON Size: ~3 KB
+Compression Ratio: 6.7x (85% bandwidth savings)
+Satellite Cost Savings: ~$0.17 (vs $0.20 direct transmission)
+
+Integrity Guarantee:
+    - SHA-256 cryptographic hash validation
+    - Bit-perfect document reconstruction on server
+    - Legal validity maintained (hash match = authentic document)
+    - No AI hallucinations (deterministic PDF generation)
+
+Connection Details:
+    - Location: North Sea, 54.2°N, 8.5°E
+    - Satellite: Inmarsat FleetBroadband
+    - Bandwidth Cost: $10/MB
+    - Transmission Time: <5 seconds (AI extraction + upload)
+
+
+================================================================================
+                          CONTACT INFORMATION
+================================================================================
+
+For payment verification:
+    Hamburg Port Authority Finance: +49 40 42847 2300
+    Email: finance@hamburg-port-authority.de
+
+For vessel operations:
+    Maersk Maritime Operations: ops@maersk.com
+    Vessel Agent Hamburg: agent.hamburg@maersk.com
+
+For technical support:
+    1870 Telegraph Protocol: support@1870protocol.io
+    Emergency: +45 3363 3363
+
+
+END OF SWIFT PAYMENT ORDER
+Document Hash (SHA-256): [To be calculated upon PDF generation]

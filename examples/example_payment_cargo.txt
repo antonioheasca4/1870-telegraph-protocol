@@ -1,0 +1,303 @@
+MARITIME PAYMENT - CARGO HANDLING INVOICE
+
+Document Reference: PAY-CGO-BCN-2025-445
+Date: December 6, 2025
+Transaction Type: PAYMENT (Invoice Settlement)
+Priority: Standard (Net 15 days)
+Maritime Context: Container Terminal Services
+
+
+================================================================================
+                            SENDER INFORMATION
+================================================================================
+
+Company Name: Mediterranean Shipping Company (MSC)
+Registered Office: Geneva, Switzerland
+Vessel: MSC Flaminia (IMO: 9321456)
+Vessel Type: Ultra Large Container Vessel (ULCV)
+
+Banking Details:
+    Account Holder: MSC Mediterranean Shipping Company SA
+    IBAN: CH9300762011623852957
+    Bank: UBS Switzerland AG
+    SWIFT/BIC: UBSWCHZH80A
+    Bank Branch: Geneva International Banking
+
+Finance Contact: payments@msc.com
+Vessel Agent Barcelona: agent.bcn@msc.com
+
+
+================================================================================
+                           RECEIVER INFORMATION
+================================================================================
+
+Company: Port de Barcelona - Terminal Catalunya
+Department: Container Operations - Finance Division
+Service Provider: BEST (Barcelona Europe South Terminal)
+Location: Barcelona, Spain
+
+Banking Details:
+    Account Holder: Port de Barcelona Authority
+    IBAN: ES9121000418450200051332
+    Bank: CaixaBank, S.A.
+    SWIFT/BIC: CAIXESBBXXX
+    Bank Branch: Port of Barcelona Branch
+
+Invoice Contact: invoicing@portdebarcelona.cat
+Customer Service: +34 932 98 60 00
+
+
+================================================================================
+                          TRANSACTION DETAILS
+================================================================================
+
+Payment Amount: EUR 82,500.00
+(Eighty-Two Thousand Five Hundred Euro Only)
+
+Currency: EUR (Euro)
+VAT: Included (21% Spanish VAT on applicable services)
+
+Purpose of Payment:
+Container handling and terminal services for vessel MSC Flaminia
+at Barcelona Europe South Terminal (BEST).
+
+Service Period: November 20-25, 2025
+Vessel Call Details:
+    Name: MSC Flaminia
+    IMO: 9321456
+    Flag: Liberia
+    Gross Tonnage: 154,000 GT
+    Container Capacity: 13,800 TEU
+
+Port Call Information:
+    Terminal: BEST - Barcelona Europe South Terminal
+    Berth: North Quay, Berth 5-6 (deep water berth)
+    Arrival: November 20, 2025, 08:30 local time
+    Departure: November 25, 2025, 16:00 local time
+    Total Port Time: 5 days, 7.5 hours
+
+Container Operations Summary:
+    Containers Discharged: 2,840 TEU
+        - 20' containers: 1,420 units
+        - 40' containers: 1,420 units
+        - Refrigerated containers: 280 units (reefers)
+        - Hazardous cargo: 85 units (IMO class containers)
+    
+    Containers Loaded: 3,150 TEU
+        - 20' containers: 1,260 units
+        - 40' containers: 1,890 units
+        - Refrigerated containers: 315 units
+        - Empty containers: 420 units
+    
+    Total Container Moves: 5,990 TEU
+
+Cargo Types Handled:
+    - General containerized cargo
+    - Refrigerated goods (fruits, meat, pharmaceuticals)
+    - Hazardous materials (chemicals - IMO certified)
+    - Automotive parts
+    - Electronics and consumer goods
+
+
+================================================================================
+                          INVOICE BREAKDOWN
+================================================================================
+
+1. CONTAINER HANDLING CHARGES:
+   Discharge operations (2,840 TEU @ EUR 18/TEU):     EUR 51,120.00
+   Loading operations (3,150 TEU @ EUR 16/TEU):       EUR 50,400.00
+   Subtotal container handling:                       EUR 101,520.00
+
+2. SPECIAL HANDLING SURCHARGES:
+   Refrigerated containers (595 units @ EUR 25/unit): EUR 14,875.00
+   Hazardous cargo (85 units @ EUR 45/unit):          EUR 3,825.00
+   Overweight containers (12 units @ EUR 80/unit):    EUR 960.00
+   Subtotal special handling:                         EUR 19,660.00
+
+3. TERMINAL INFRASTRUCTURE CHARGES:
+   Berth occupancy (5.5 days @ EUR 2,800/day):        EUR 15,400.00
+   Quay crane usage (180 hours @ EUR 120/hour):       EUR 21,600.00
+   Yard storage (average 2 days @ EUR 8/TEU/day):     EUR 47,840.00
+   Subtotal infrastructure:                           EUR 84,840.00
+
+4. ANCILLARY SERVICES:
+   Reefer monitoring and power (595 units):           EUR 8,925.00
+   Weighing services (VGM compliance):                EUR 2,990.00
+   Lashing/unlashing operations:                      EUR 4,780.00
+   Documentation and customs interface:               EUR 1,850.00
+   Subtotal ancillary:                                EUR 18,545.00
+
+GROSS TOTAL:                                          EUR 224,565.00
+
+5. DISCOUNTS:
+   Volume discount (MSC annual contract - 15%):       EUR -33,684.75
+   Early berth vacation bonus (left 4 hrs early):     EUR -2,240.00
+   Subtotal after discounts:                          EUR 188,640.25
+
+6. DEDUCTIONS:
+   Previous overpayment credit (Invoice BCN-2025-389): EUR -38,640.25
+
+NET AMOUNT BEFORE VAT:                                EUR 150,000.00
+
+7. VAT (21% on taxable services):                     EUR 31,500.00
+   (Note: International maritime services VAT-exempt,
+    but terminal infrastructure and local services subject to VAT)
+
+TOTAL AMOUNT DUE:                                     EUR 181,500.00
+
+8. PROMPT PAYMENT DISCOUNT (if paid within 7 days):
+   Early payment discount (10%):                      EUR -18,150.00
+
+AMOUNT WITH PROMPT PAYMENT:                           EUR 163,350.00
+
+***MSC has chosen prompt payment option***
+
+FINAL PAYMENT AMOUNT:                                 EUR 82,500.00
+(Remaining EUR 80,850 covered by monthly credit facility)
+
+
+================================================================================
+                        ADDITIONAL INFORMATION
+================================================================================
+
+Invoice Number: BCN-BEST-2025-445
+Invoice Date: November 26, 2025
+Due Date: December 11, 2025 (Net 15 days)
+Early Payment Deadline: December 3, 2025 (10% discount if paid by this date)
+Payment Date (this transaction): December 6, 2025 ✓ QUALIFIES FOR DISCOUNT
+
+Service Agreement: MSC-PORTBCN-ANNUAL-2025
+Contract Period: January 1, 2025 - December 31, 2025
+Monthly Container Volume Commitment: 25,000 TEU minimum
+YTD Volume (Jan-Nov): 287,540 TEU ✓ EXCEEDS TARGET
+
+Payment Terms: 
+    - Standard: Net 15 days from invoice date
+    - Prompt payment: 10% discount if paid within 7 days
+    - Monthly credit facility: EUR 500,000 (current balance: EUR 80,850)
+    - Annual settlement: December 31, 2025
+
+Tax Information:
+    - Port de Barcelona VAT Number: ES-Q0873009J
+    - MSC VAT Number: CHE-123.456.789
+    - Tax point: Date of service completion
+    - Reverse charge: Not applicable (services in Spain)
+
+References:
+    - Call Number: BCN-2025-0891
+    - Berth Booking: BEST-BK-2025-1123
+    - Customs Entry: ES-BCN-2025-45678
+    - Bill of Lading: MSCU123456789
+
+
+================================================================================
+                      COMPLIANCE & DECLARATIONS
+================================================================================
+
+Anti-Money Laundering (AML):
+    - Transaction type: Commercial port services payment
+    - Risk level: LOW (established business relationship)
+    - Both parties: EU-regulated entities
+    - AML verification: Completed 2024 (annual review)
+
+Know Your Customer (KYC):
+    - MSC: Major shipping line (global top 3)
+    - Port de Barcelona: Government-regulated port authority
+    - Relationship duration: 15+ years
+    - Enhanced due diligence: Not required (low risk)
+
+Tax Compliance:
+    - Spanish VAT correctly applied (21% on applicable services)
+    - International maritime transport: VAT-exempt (correctly applied)
+    - Withholding tax: Not applicable (intra-EU B2B services)
+    - Invoice compliance: Spanish Royal Decree 1619/2012
+
+Sanctions Screening:
+    - Vessel flag: Liberia (PASSED - no restrictions)
+    - Cargo: No OFAC/EU sanctioned goods
+    - Ports of call: All ISPS compliant
+    - No sanctioned parties involved
+
+Maritime Compliance:
+    - ISPS Code: Compliant (International Ship and Port Security)
+    - SOLAS regulations: Verified
+    - VGM (Verified Gross Mass): All containers compliant
+    - Hazmat certifications: IMO DGD provided for all dangerous goods
+    - Environmental compliance: MARPOL regulations followed
+
+
+================================================================================
+                           SIGNATURES
+================================================================================
+
+This payment order has been authorized and verified electronically
+through the 1870 Telegraph Protocol maritime banking system.
+
+Electronic Signature Status: VERIFIED
+Authorized by: MSC Mediterranean Shipping Company SA - Finance Department
+Approver: Regional Finance Manager, Mediterranean Division
+Timestamp: 2025-12-06 11:20:00 UTC
+Digital Certificate: Valid (SHA-256)
+Hash Verification: Pending server reconstruction
+
+Payment Authorization Chain:
+    1. Terminal Manager Barcelona: Approved (service verification)
+    2. Regional Finance Manager: Approved (budget verification)
+    3. Treasury Department Geneva: Approved (payment execution)
+
+
+================================================================================
+                        TRANSMISSION NOTES
+================================================================================
+
+This payment order is transmitted from MSC headquarters in Geneva via
+standard internet connection. No maritime satellite involved for this
+shore-based transaction.
+
+However, the invoice documents and vessel reports were originally
+transmitted FROM THE VESSEL (MSC Flaminia) using the 1870 Telegraph
+Protocol during the vessel's Atlantic crossing.
+
+Original Vessel Transmission (November 25):
+    Location: Western Mediterranean, en route to Barcelona
+    Vessel Documentation: Bill of Lading, Cargo Manifest, Port Reports
+    Original Size: ~150 KB (multiple scanned documents)
+    Compressed Size: ~8 KB (JSON extraction)
+    Compression Ratio: 18.75x
+    Satellite Cost Saved: EUR 1.42 (vs EUR 1.50 direct)
+
+Shore-Based Payment Transmission (December 6):
+    Location: Geneva, Switzerland
+    Connection: Corporate fiber internet (no satellite cost)
+    Transmission: Standard banking SWIFT network
+    1870 Protocol: Used for document integrity verification only
+
+
+================================================================================
+                          CONTACT INFORMATION
+================================================================================
+
+For payment confirmation:
+    Port de Barcelona Finance: +34 932 98 60 50
+    Email: invoicing@portdebarcelona.cat
+    Payment queries: payments@portdebarcelona.cat
+
+For service/operational queries:
+    BEST Terminal Operations: +34 932 98 62 00
+    Customer Service: customerservice@best.cat
+
+MSC Contacts:
+    Finance Department: payments@msc.com
+    Barcelona Agent: agent.bcn@msc.com
+    Regional Office: mediterranean@msc.com
+
+1870 Telegraph Protocol:
+    Document verification: verify@1870protocol.io
+    Technical support: support@1870protocol.io
+
+
+END OF PAYMENT ORDER
+Document Hash (SHA-256): [To be calculated upon PDF generation]
+
+Payment Status: APPROVED - Funds will be transferred via standard banking channels
+Expected settlement: December 7, 2025 (T+1 business day)

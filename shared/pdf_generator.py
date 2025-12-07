@@ -217,8 +217,12 @@ class PDFGenerator:
             sender_data = []
             for field, value in sender_fields.items():
                 label = field.replace('sender_', '').replace('_', ' ').title()
-                if isinstance(value, (dict, list)):
-                    value = str(value)
+                if isinstance(value, dict):
+                    # Format dict nicely: key: value on separate lines
+                    value = '<br/>'.join([f'{k.replace("_", " ").title()}: {v}' for k, v in value.items()])
+                elif isinstance(value, list):
+                    # Format list nicely: bullet points
+                    value = '<br/>'.join([f'• {item}' for item in value])
                 sender_data.append([f'{label}:', Paragraph(str(value), self.normal_style)])
             elements.extend(self._create_section('SENDER INFORMATION', sender_data))
         
@@ -227,8 +231,12 @@ class PDFGenerator:
             receiver_data = []
             for field, value in receiver_fields.items():
                 label = field.replace('receiver_', '').replace('_', ' ').title()
-                if isinstance(value, (dict, list)):
-                    value = str(value)
+                if isinstance(value, dict):
+                    # Format dict nicely: key: value on separate lines
+                    value = '<br/>'.join([f'{k.replace("_", " ").title()}: {v}' for k, v in value.items()])
+                elif isinstance(value, list):
+                    # Format list nicely: bullet points
+                    value = '<br/>'.join([f'• {item}' for item in value])
                 receiver_data.append([f'{label}:', Paragraph(str(value), self.normal_style)])
             elements.extend(self._create_section('RECEIVER INFORMATION', receiver_data))
         
@@ -260,11 +268,22 @@ class PDFGenerator:
                 elements.append(Spacer(1, 0.3*cm))
             
             elif isinstance(value, dict):
-                # Dictionaries (bank_details, etc.)
+                # Dictionaries (bank_details, emergency_transmission_details, etc.)
                 dict_data = []
                 for k, v in value.items():
                     label = k.replace('_', ' ').title()
-                    dict_data.append([f'{label}:', Paragraph(str(v), self.normal_style)])
+                    # Format nested values properly
+                    if isinstance(v, dict):
+                        # Nested dict - format as key: value pairs
+                        formatted_v = '<br/>'.join([f'{nk.replace("_", " ").title()}: {nv}' for nk, nv in v.items()])
+                        dict_data.append([f'{label}:', Paragraph(formatted_v, self.normal_style)])
+                    elif isinstance(v, list):
+                        # Nested list - format as bullet points
+                        formatted_v = '<br/>'.join([f'• {item}' for item in v])
+                        dict_data.append([f'{label}:', Paragraph(formatted_v, self.normal_style)])
+                    else:
+                        # Simple value
+                        dict_data.append([f'{label}:', Paragraph(str(v), self.normal_style)])
                 elements.extend(self._create_section(field.replace('_', ' ').title(), dict_data))
             
             else:
@@ -356,16 +375,224 @@ class DigitalCodebook:
     """
     Digital Codebook - Set of rules for deterministic PDF reconstruction.
     Ensures that same JSON produces same output on client and server.
+    Includes field compression for bandwidth optimization.
     """
     
     # Codebook version (for synchronization between client and server)
     VERSION = "1.0.0"
+    
+    # Field compression mapping (long field names → short codes)
+    FIELD_CODES = {
+        # Transaction basics
+        'transaction_type': 'tt',
+        'document_reference': 'ref',
+        'date': 'd',
+        'time_utc': 'tu',
+        'priority': 'pr',
+        'maritime_context': 'mc',
+        'amount': 'amt',
+        'currency': 'cur',
+        'description': 'desc',
+        
+        # Sender fields
+        'sender_name': 'sn',
+        'sender_registered_office': 'sro',
+        'sender_account_holder': 'sah',
+        'sender_account': 'sa',
+        'sender_bank': 'sb',
+        'sender_swift': 'ss',
+        'sender_bank_branch': 'sbb',
+        'sender_emergency_contact_phone': 'sep',
+        'sender_operations_manager_email': 'soe',
+        'sender_address': 'sadr',
+        'sender_contact_email': 'sce',
+        
+        # Receiver fields
+        'receiver_name': 'rn',
+        'receiver_service': 'rsv',
+        'receiver_location': 'rl',
+        'receiver_account_holder': 'rah',
+        'receiver_account': 'ra',
+        'receiver_bank': 'rb',
+        'receiver_swift': 'rs',
+        'receiver_bank_branch': 'rbb',
+        'receiver_contact_email': 'rce',
+        'receiver_emergency_hotline': 'reh',
+        'receiver_address': 'radr',
+        'receiver_department': 'rdep',
+        'receiver_invoice_contact_email': 'rice',
+        'receiver_port_ops_phone': 'rpop',
+        
+        # Vessel fields
+        'vessel_name': 'vn',
+        'vessel_imo': 'vi',
+        'vessel_current_position': 'vp',
+        'vessel_master': 'vm',
+        'vessel_flag_state': 'vf',
+        'vessel_flag': 'vflg',
+        'vessel_call_sign': 'vcs',
+        'vessel_crew_count': 'vcc',
+        'vessel_fuel_remaining_metric_tons': 'vfr',
+        'vessel_current_speed_knots': 'vsk',
+        'vessel_eta_rotterdam_if_no_refuel': 'vet',
+        
+        # Port fields
+        'port_name': 'pn',
+        'port_berth': 'pb',
+        'port_arrival_datetime': 'pad',
+        'port_departure_datetime': 'pdd',
+        'port_time_duration': 'ptd',
+        
+        # Cargo fields
+        'cargo_details': 'cd',
+        'cargo_delivery_deadline': 'cdd',
+        'cargo_discharge_teu': 'cdt',
+        'cargo_loading_teu': 'clt',
+        'cargo_total_handling_teu': 'cth',
+        'cargo_type': 'ct',
+        
+        # Service/Invoice fields
+        'service_period_start': 'sps',
+        'service_period_end': 'spe',
+        'invoice_reference': 'iref',
+        'invoice_date': 'idate',
+        'invoice_number': 'inum',
+        'due_date': 'ddate',
+        'fees_breakdown': 'fees',
+        'early_payment_deadline': 'epd',
+        'service_agreement_ref': 'sref',
+        'other_references': 'oref',
+        'reference_number': 'refn',
+        
+        # VAT/Tax
+        'vat_applicable': 'vat',
+        'vat_reason': 'vatr',
+        'vat_included': 'vati',
+        'vat_rate': 'vatr',
+        'sender_vat_number': 'svat',
+        'receiver_vat_number': 'rvat',
+        
+        # Vessel extended
+        'vessel_type': 'vty',
+        'vessel_gross_tonnage': 'vgt',
+        'vessel_container_capacity_teu': 'vcap',
+        
+        # Port extended
+        'port_terminal': 'pterm',
+        
+        # Cargo operations
+        'cargo_operations': 'cops',
+        
+        # Invoice summary
+        'invoice_summary': 'isum',
+        
+        # Compliance fields
+        'compliance_aml': 'aml',
+        'compliance_kyc': 'kyc',
+        'compliance_sanctions': 'sanc',
+        'compliance_maritime': 'cmar',
+        'compliance_info': 'cinf',
+        'purpose_verification': 'pver',
+        
+        # Payment/Authorization
+        'payment_authorization_status': 'pauth',
+        'expected_settlement_date': 'esd',
+        'receiver_contact_phone': 'rcp',
+        
+        # Authorization
+        'signature_status': 'sigst',
+        'authorized_by': 'auth',
+        'authorization_timestamp': 'autht',
+        
+        # Transmission/Technical
+        'transmission_details': 'trans',
+        'transmission_notes': 'tnote',
+        'verification_contact': 'vcon',
+        'operations_contact': 'ocon',
+        'technical_support_contact': 'tcon',
+        
+        # Emergency/execution
+        'execution_details': 'ed',
+        'emergency_situation_details': 'esd',
+        'special_instructions': 'sinst',
+        'payment_confirmation_email': 'pce',
+        'vessel_agent_copy_email': 'vace',
+        
+        # References
+        'port_authority_references': 'pref',
+        
+        # Technical
+        'generated_timestamp': 'gt',
+        'signature_present': 'sig',
+        'additional_info': 'ai'
+    }
+    
+    # Reverse mapping for decompression
+    CODE_TO_FIELD = {v: k for k, v in FIELD_CODES.items()}
     
     def __init__(self):
         """
         Initializes Digital Codebook.
         """
         self.pdf_generator = PDFGenerator()
+    
+    def compress_fields(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Compresses field names using short codes.
+        
+        Args:
+            data: Data with full field names
+            
+        Returns:
+            Data with compressed field names
+        """
+        compressed = {}
+        for key, value in data.items():
+            # Use short code if available, otherwise keep original
+            short_key = self.FIELD_CODES.get(key, key)
+            
+            # Recursively compress nested dicts
+            if isinstance(value, dict):
+                compressed[short_key] = self.compress_fields(value)
+            elif isinstance(value, list):
+                # Compress list items if they're dicts
+                compressed[short_key] = [
+                    self.compress_fields(item) if isinstance(item, dict) else item
+                    for item in value
+                ]
+            else:
+                compressed[short_key] = value
+        
+        return compressed
+    
+    def decompress_fields(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Decompresses field names from short codes.
+        
+        Args:
+            data: Data with compressed field names
+            
+        Returns:
+            Data with full field names
+        """
+        decompressed = {}
+        for key, value in data.items():
+            # Expand short code if it exists, otherwise keep original
+            full_key = self.CODE_TO_FIELD.get(key, key)
+            
+            # Recursively decompress nested dicts
+            if isinstance(value, dict):
+                decompressed[full_key] = self.decompress_fields(value)
+            elif isinstance(value, list):
+                # Decompress list items if they're dicts
+                decompressed[full_key] = [
+                    self.decompress_fields(item) if isinstance(item, dict) else item
+                    for item in value
+                ]
+            else:
+                decompressed[full_key] = value
+        
+        return decompressed
     
     def normalize_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -376,9 +603,10 @@ class DigitalCodebook:
             data: Raw data
             
         Returns:
-            Normalized data
+            Normalized data (decompressed for processing)
         """
-        normalized = data.copy()
+        # First decompress if data contains short codes
+        normalized = self.decompress_fields(data.copy())
         
         # Ensure we have required fields
         if 'transaction_type' not in normalized:
